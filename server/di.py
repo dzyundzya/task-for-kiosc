@@ -1,6 +1,8 @@
 import punq
 from django.conf import LazySettings, settings
 
+from server.apps.workers.infra.repository import WorkerRepo
+
 
 def _inject_settings(container: punq.Container) -> None:
     """Register settings."""
@@ -9,7 +11,7 @@ def _inject_settings(container: punq.Container) -> None:
 
 def _injest_infra(container: punq.Container) -> None:
     """Register repositories."""
-    pass
+    container.register(WorkerRepo)
 
 
 def create_container() -> punq.Container:
