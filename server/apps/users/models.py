@@ -31,9 +31,5 @@ class CustomUser(AbstractUser):
         return self.username
     
     @property
-    def is_user(self) -> bool:
-        return self.role in RoleType.USER
-    
-    @property
     def is_admin(self) -> bool:
         return self.role in RoleType.ADMIN or self.is_superuser

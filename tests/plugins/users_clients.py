@@ -47,7 +47,7 @@ def auth_admin(user_factory: UserFactory) -> CustomUser:
         first_name='first_name_admin',
         last_name='last_name_admin',
         is_active=True,
-        role='Admin'
+        role='admin'
     )
 
 
@@ -60,7 +60,7 @@ def auth_user(user_factory: UserFactory) -> CustomUser:
         first_name='first_name_user',
         last_name='last_name_user',
         is_active=True,
-        role='User'
+        role='user'
     )
 
 

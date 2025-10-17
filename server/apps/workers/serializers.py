@@ -46,6 +46,6 @@ class WorkerCreateUpdateSerializer(WorkerListSerializer):
             return super().create(validated_data)
         except IntegrityError as exc:
             raise serializers.ValidationError(
-                {"email": "Email уже существует."}
+                {'email': 'The email already exists.'}
             )
 
