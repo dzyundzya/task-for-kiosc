@@ -14,7 +14,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 INSTALLED_APPS: tuple[str, ...] = (
     # Your apps go here:
-    'server.apps.worker',
+    'server.apps.workers',
     'server.apps.users',
     # Default django apps:
     'django.contrib.auth',
