@@ -1,0 +1,1 @@
+NAME_LENGTH: int = 100
