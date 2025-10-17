@@ -26,7 +26,6 @@ class Worker(TimeStampedModel):
         'Moddle name',
         max_length=constants.NAME_LENGTH,
         blank=True,
-        null=True,
     )
     last_name = models.CharField(
         'Last name',
@@ -56,16 +55,16 @@ class Worker(TimeStampedModel):
     class Meta:
         ordering = ('-created_at',)
         indexes = [
+            models.Index(fields=['email']),
             models.Index(fields=['position']),
             models.Index(fields=['is_active']),
         ]
+        constraints = (
+            models.CheckConstraint(
+                name='%(app_label)s_%(class)s_position_valid',
+                condition=(models.Q(position__in=PositionType.values)),
+            ),
+        )
 
     def __str__(self) -> str:
         return f'{self.last_name} {self.first_name} ({self.position})'
-
-    def soft_delete(self) -> None:
-        self.is_active = False
-        deleted_at = timezone.now()
-        self.save(update_fields=['is_active', 'deleted_at', 'updated_at'])
-
-

@@ -16,6 +16,7 @@ from django.views.generic import TemplateView
 from health_check import urls as health_urls
 
 from server.apps.users import urls as users_urls
+from server.apps.workers import urls as workers_urls
 from server.di import resolve
 
 
@@ -25,6 +26,7 @@ settings = resolve(conf.LazySettings)
 urlpatterns = [
     # Apps:
     path('api/', include(users_urls)),
+    path('api/', include(workers_urls)),
     # Health checks:
     path('health/', include(health_urls)),
     # django-admin:

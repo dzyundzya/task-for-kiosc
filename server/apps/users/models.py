@@ -19,6 +19,12 @@ class CustomUser(AbstractUser):
         ordering = ('id',)
         verbose_name = 'user'
         verbose_name_plural = 'Users'
+        constraints = (
+            models.CheckConstraint(
+                name='%(app_label)s_%(class)s_role_valid',
+                condition=(models.Q(role__in=RoleType.values)),
+            ),
+        )
 
     @override
     def __str__(self) -> str:

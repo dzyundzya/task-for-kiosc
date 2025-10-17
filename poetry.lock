@@ -1015,6 +1015,24 @@ Faker = ">=10.0,<11.0"
 six = ">=1.10.1"
 
 [[package]]
+name = "django-filter"
+version = "25.2"
+description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "django_filter-25.2-py3-none-any.whl", hash = "sha256:9c0f8609057309bba611062fe1b720b4a873652541192d232dd28970383633e3"},
+    {file = "django_filter-25.2.tar.gz", hash = "sha256:760e984a931f4468d096f5541787efb8998c61217b73006163bf2f9523fe8f23"},
+]
+
+[package.dependencies]
+Django = ">=5.2"
+
+[package.extras]
+drf = ["djangorestframework"]
+
+[[package]]
 name = "django-health-check"
 version = "3.20.0"
 description = "Monitor the health of your Django app and its connected services."
@@ -4371,4 +4389,4 @@ dev = ["doc8", "flake8", "flake8-import-order", "rstcheck[sphinx]", "sphinx"]
 [metadata]
 lock-version = "2.1"
 python-versions = "==3.12.11"
-content-hash = "1ddbd91995738620b9ca455d662e95ed77f84c3022a98150074ae3c824cf8aba"
+content-hash = "3fea48d3bab50793cb4b319ae92ce7dd306e14d5eb527e8b5f8467e62c5f7645"
