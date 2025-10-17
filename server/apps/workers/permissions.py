@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 
 class IsAdmibOrReadOnly(permissions.BasePermission):  # type: ignore[misc]
+    """Allow only admins to modify objects, others can read."""
 
     def has_permission(self, request: Request, view: APIView) -> bool:
         if request.method == permissions.SAFE_METHODS:

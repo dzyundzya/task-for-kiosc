@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from django.db.models import QuerySet
@@ -15,6 +16,10 @@ from server.apps.workers.serializers import (
     WorkerListSerializer,
 )
 from server.di import resolve
+
+
+logger = logging.getLogger(__name__)
+
 
 class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
     """Viewsets for Worker model."""
@@ -36,7 +41,10 @@ class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
         }.get(self.action, WorkerCreateUpdateSerializer)
     
     def perform_create(self, serializer: WorkerCreateUpdateSerializer) -> None:
-        serializer.save(created_by=self.request.user)
+        worker = serializer.save(created_by=self.request.user)
+        logger.info(
+            f'Worker created (id={worker.id}) by user={self.request.user.id}'
+        )
     
     def destroy(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Soft delete a worker."""

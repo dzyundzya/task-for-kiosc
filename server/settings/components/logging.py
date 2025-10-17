@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import logging.config
 from collections.abc import Callable
 from typing import TYPE_CHECKING, final
 
@@ -110,3 +111,12 @@ if not structlog.is_configured():
         wrapper_class=structlog.stdlib.BoundLogger,
         cache_logger_on_first_use=True,
     )
+
+
+LOGGING["loggers"]["server"] = {
+    "handlers": ["console"],
+    "level": "INFO",
+    "propagate": False,
+}
+
+logging.config.dictConfig(LOGGING)

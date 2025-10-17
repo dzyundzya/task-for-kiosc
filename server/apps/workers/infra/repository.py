@@ -8,7 +8,7 @@ from server.apps.workers.models import Worker
 
 @final
 class WorkerRepo:
-    """Repository for Collect model."""
+    """Repository for Worker model."""
 
     def get_all(self) -> QuerySet[Worker]:
         """Returns all worker options from DB."""
