@@ -17,7 +17,7 @@ class TimeStampedModel(models.Model):
 
 class Worker(TimeStampedModel):
     """Worker model."""
-    
+
     first_name = models.CharField(
         'First name',
         max_length=constants.NAME_LENGTH,
@@ -56,7 +56,6 @@ class Worker(TimeStampedModel):
     class Meta:
         ordering = ('-created_at',)
         indexes = [
-            models.Index(fields=['email']),
             models.Index(fields=['position']),
             models.Index(fields=['is_active']),
         ]
