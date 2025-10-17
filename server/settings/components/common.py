@@ -1,12 +1,5 @@
-"""
-Django settings for server project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.2/topics/settings/
-
-For the full list of settings and their config, see
-https://docs.djangoproject.com/en/5.2/ref/settings/
-"""
+import os
+from datetime import timedelta
 
 from django.utils.translation import gettext_lazy as _
 
@@ -21,6 +14,8 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 INSTALLED_APPS: tuple[str, ...] = (
     # Your apps go here:
+    'server.apps.worker',
+    'server.apps.users',
     # Default django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +34,9 @@ INSTALLED_APPS: tuple[str, ...] = (
     'health_check.db',
     'health_check.cache',
     'health_check.storage',
+    # DRF apps
+    'rest_framework',
+    'djoser',
 )
 
 MIDDLEWARE: tuple[str, ...] = (
@@ -192,3 +190,15 @@ PERMISSIONS_POLICY: dict[str, str | list[str]] = {}
 # https://docs.djangoproject.com/en/5.2/ref/settings/#std:setting-EMAIL_TIMEOUT
 
 EMAIL_TIMEOUT = 5
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(
+        days=int(os.getenv('JWT_ACCESS_DAYS', '15'))
+    ),
+    'REFRESH_TOKEN_LIFETIME': timedelta(
+        days=int(os.getenv('JWT_REFRESH_DAYS', '7'))
+    ),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
