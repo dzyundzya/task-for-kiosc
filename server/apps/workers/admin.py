@@ -1,5 +1,10 @@
+import logging
+
 from django.contrib import admin
 from server.apps.workers.models import Worker
+
+
+logger = logging.getLogger(__name__)
 
 
 @admin.register(Worker)
@@ -23,4 +28,4 @@ class WorkerAdmin(admin.ModelAdmin[Worker]):
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
         if not change:
-            print(f'[ADMIN] Worker created by {request.user}: {obj}')
+            logger.info(f'[ADMIN] Worker created by {request.user}: {obj}')
