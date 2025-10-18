@@ -21,7 +21,7 @@ class WorkerRepo:
     def get_by_pk(self, pk: int) -> Worker:
         """Returns one worker option from DB by pk."""
         return self.get_all().get(pk=pk)
-    
+
     def soft_delete(self, pk: int) -> Worker:
         worker = self.get_by_pk(pk=pk)
         worker.is_active = False

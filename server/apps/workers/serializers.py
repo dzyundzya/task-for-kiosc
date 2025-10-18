@@ -13,12 +13,12 @@ class WorkerListSerializer(serializers.ModelSerializer[Worker]):  # type: ignore
     class Meta:
         model = Worker
         fields = (
-            'id', 
-            'first_name', 
-            'middle_name', 
-            'last_name', 
-            'position', 
-            'is_active'
+            'id',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'position',
+            'is_active',
         )
 
 
@@ -27,7 +27,11 @@ class WorkerDetailSerializer(WorkerListSerializer):
 
     class Meta(WorkerListSerializer.Meta):
         fields = WorkerListSerializer.Meta.fields + (  # type: ignore[assignment]
-            'created_by', 'email', 'hired_date', 'created_at', 'updated_at'
+            'created_by',
+            'email',
+            'hired_date',
+            'created_at',
+            'updated_at',
         )
 
 
@@ -46,9 +50,9 @@ class WorkerCreateUpdateSerializer(WorkerListSerializer):
         try:
             return super().create(validated_data)
         except IntegrityError as exc:
-            raise serializers.ValidationError(
-                {'email': 'The email already exists.'}
-            )
+            raise serializers.ValidationError({
+                'email': 'The email already exists.'
+            })
 
 
 class WorkerImportSerializer(serializers.Serializer):  # type: ignore[misc]

@@ -10,7 +10,7 @@ class IsAdmibOrReadOnly(permissions.BasePermission):  # type: ignore[misc]
         if request.method in permissions.SAFE_METHODS:
             return True
         return bool(
-            request.user 
+            request.user
             and request.user.is_authenticated
             and request.user.is_admin
         )

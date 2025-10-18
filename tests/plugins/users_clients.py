@@ -47,7 +47,7 @@ def auth_admin(user_factory: UserFactory) -> CustomUser:
         first_name='first_name_admin',
         last_name='last_name_admin',
         is_active=True,
-        role='admin'
+        role='admin',
     )
 
 
@@ -60,7 +60,7 @@ def auth_user(user_factory: UserFactory) -> CustomUser:
         first_name='first_name_user',
         last_name='last_name_user',
         is_active=True,
-        role='user'
+        role='user',
     )
 
 
@@ -71,16 +71,16 @@ def api_client() -> APIClient:
 
 
 @pytest.fixture
-def auth_admin_client(api_client: APIClient, auth_admin: CustomUser) -> APIClient:
+def auth_admin_client(
+    api_client: APIClient, auth_admin: CustomUser
+) -> APIClient:
     """Return an authenticated APIClient for testing."""
     api_client.force_authenticate(user=auth_admin)
     return api_client
 
 
 @pytest.fixture
-def auth_user_client(
-    api_client: APIClient, auth_user: CustomUser
-) -> APIClient:
+def auth_user_client(api_client: APIClient, auth_user: CustomUser) -> APIClient:
     """Return an authenticated APIClient for testing."""
     api_client.force_authenticate(user=auth_user)
     return api_client

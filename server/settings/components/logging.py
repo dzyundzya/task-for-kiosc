@@ -113,10 +113,10 @@ if not structlog.is_configured():
     )
 
 
-LOGGING["loggers"]["server"] = {
-    "handlers": ["console"],
-    "level": "INFO",
-    "propagate": False,
+LOGGING['loggers']['server'] = {
+    'handlers': ['console'],
+    'level': 'INFO',
+    'propagate': False,
 }
 
 logging.config.dictConfig(LOGGING)

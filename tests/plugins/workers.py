@@ -52,7 +52,9 @@ def worker(worker_factory: WorkerFactory, auth_admin: CustomUser) -> Worker:
 
 
 @pytest.fixture
-def worker_batch(worker_factory: WorkerFactory, auth_admin: CustomUser) -> WorkerBatchFactory:
+def worker_batch(
+    worker_factory: WorkerFactory, auth_admin: CustomUser
+) -> WorkerBatchFactory:
     """Return a factory that creates `batch_size` Worker instances."""
 
     def factory(batch_size: int) -> list[Worker]:
@@ -64,6 +66,7 @@ def worker_batch(worker_factory: WorkerFactory, auth_admin: CustomUser) -> Worke
             )
             for worker_number in range(batch_size)
         ]
+
     return factory
 
 

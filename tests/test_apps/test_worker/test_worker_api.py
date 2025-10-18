@@ -27,6 +27,7 @@ def test_retrieve_success(worker: Worker, auth_user_client: APIClient) -> None:
 
     assert response.status_code == HTTPStatus.OK
 
+
 @pytest.mark.django_db
 def test_create_worker(auth_admin_client: APIClient) -> None:
     """Successfully creating a worker returns 201 and correct JSON."""

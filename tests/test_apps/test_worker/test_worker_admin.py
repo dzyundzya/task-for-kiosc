@@ -21,9 +21,9 @@ def test_admin_save_model_logs_creation(
     request.user = auth_admin
 
     worker = Worker(
-        first_name="John",
-        last_name="Doe",
-        email="john.doe@test.ru",
+        first_name='John',
+        last_name='Doe',
+        email='john.doe@test.ru',
     )
 
     caplog.set_level(logging.INFO)

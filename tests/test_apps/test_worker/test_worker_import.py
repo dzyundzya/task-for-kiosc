@@ -29,7 +29,7 @@ def test_import_from_excel_success(success_excel: SimpleUploadedFile) -> None:
 
 @pytest.mark.django_db
 def test_import_from_excel_with_errors(
-    not_success_excel: SimpleUploadedFile
+    not_success_excel: SimpleUploadedFile,
 ) -> None:
     """An error handling test during import"""
     service = WorkerImportService()
@@ -37,10 +37,9 @@ def test_import_from_excel_with_errors(
 
     assert workers['created'] == 0
     assert len(workers['errors']) == 2
-    assert (
-        'Required fields are missin' in str(workers['errors'][0]['error']) 
-        or 'Incorrect email' in str(workers['errors'][1]['error'])
-    )
+    assert 'Required fields are missin' in str(
+        workers['errors'][0]['error']
+    ) or 'Incorrect email' in str(workers['errors'][1]['error'])
 
 
 @pytest.mark.django_db

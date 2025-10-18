@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     """Custom User model that replaces Django's default User."""
 
     role = models.CharField(
-        'User\'s role',
+        "User's role",
         choices=RoleType.choices,
         default=RoleType.USER,
     )
@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
     @override
     def __str__(self) -> str:
         return self.username
-    
+
     @property
     def is_admin(self) -> bool:
         return self.role in RoleType.ADMIN or self.is_superuser

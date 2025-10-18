@@ -8,4 +8,9 @@ class UserSerializer(serializers.ModelSerializer[CustomUser]):  # type: ignore[m
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'first_name', 'last_name', 'email',)
+        fields = (
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+        )

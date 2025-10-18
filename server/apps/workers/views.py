@@ -4,7 +4,7 @@ from typing import Any
 import openpyxl
 from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import  serializers, status, views, viewsets
+from rest_framework import serializers, status, views, viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -35,25 +35,25 @@ class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
     def get_queryset(self) -> QuerySet[Worker]:
         """Get queryset."""
         return self.repo.get_all_active()
-    
+
     def get_serializer_class(self) -> type[serializers.BaseSerializer[Worker]]:
         """Method for selecting serializer."""
         return {
             'list': WorkerListSerializer,
             'retrieve': WorkerDetailSerializer,
         }.get(self.action, WorkerCreateUpdateSerializer)
-    
+
     def perform_create(self, serializer: WorkerCreateUpdateSerializer) -> None:
         worker = serializer.save(created_by=self.request.user)
         logger.info(
             f'Worker created (id={worker.id}) by user={self.request.user.id}'
         )
-    
+
     def destroy(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Soft delete a worker."""
         self.repo.soft_delete(pk=kwargs['pk'])
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     @property
     def repo(self) -> WorkerRepo:
         """Get WorkerRepo instance from dependency container."""

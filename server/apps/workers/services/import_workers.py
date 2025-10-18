@@ -28,9 +28,7 @@ class WorkerImportService:
             }
 
         sheet = workbook.active
-        existing_emails = set(
-            Worker.objects.values_list('email', flat=True)
-        )
+        existing_emails = set(Worker.objects.values_list('email', flat=True))
 
         workers_to_create = []
 
@@ -40,29 +38,34 @@ class WorkerImportService:
             first_name, last_name, email, position = row
 
             if not (first_name and last_name and email):
-                self.errors.append(
-                    {'row': idx, ERROR: 'Required fields are missing.'}
-                )
+                self.errors.append({
+                    'row': idx,
+                    ERROR: 'Required fields are missing.',
+                })
                 continue
 
             if '@' not in email:
-                self.errors.append(
-                    {'row': idx, ERROR: f'Incorrect email: {email}'}
-                )
+                self.errors.append({
+                    'row': idx,
+                    ERROR: f'Incorrect email: {email}',
+                })
                 continue
 
             if email in existing_emails:
-                self.errors.append(
-                    {'row': idx, ERROR: f'Email already exists: {email}'}
-                )
+                self.errors.append({
+                    'row': idx,
+                    ERROR: f'Email already exists: {email}',
+                })
                 continue
 
-            workers_to_create.append(Worker(
-                first_name=first_name.strip(),
-                last_name=last_name.strip(),
-                email=email.strip(),
-                position=position or 'other',
-            ))
+            workers_to_create.append(
+                Worker(
+                    first_name=first_name.strip(),
+                    last_name=last_name.strip(),
+                    email=email.strip(),
+                    position=position or 'other',
+                )
+            )
             existing_emails.add(email)
 
         Worker.objects.bulk_create(workers_to_create)

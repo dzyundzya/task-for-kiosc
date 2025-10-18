@@ -4,6 +4,7 @@ from django.utils import timezone
 from server.apps.workers.choices import PositionType
 from server.common import constants
 
+
 class TimeStampedModel(models.Model):
     "Abstract model with time shtamps."
 
@@ -48,7 +49,7 @@ class Worker(TimeStampedModel):
         blank=True,
         null=True,
         related_name='workers',
-        verbose_name='User created the employee record'
+        verbose_name='User created the employee record',
     )
     deleted_at = models.DateTimeField('Date deleted', blank=True, null=True)
 
