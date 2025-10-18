@@ -1,4 +1,5 @@
 import logging
+from typing import override
 
 from django.contrib import admin
 from django.http import HttpRequest
@@ -13,7 +14,6 @@ class WorkerAdmin(admin.ModelAdmin[Worker]):
     """Admin configuration for the Worker model."""
 
     list_display = (
-        'id',
         'last_name',
         'first_name',
         'position',
@@ -26,12 +26,13 @@ class WorkerAdmin(admin.ModelAdmin[Worker]):
     list_editable = ('is_active',)
     readonly_fields = ('created_at', 'updated_at', 'hired_date')
 
+    @override
     def save_model(
         self,
         request: HttpRequest,
         obj: Worker,  # noqa: WPS110
         form: BaseException | None,
-        change: bool,  # noqa: FBT001
+        change: bool,
     ) -> None:
         """Set creator on creation and log event."""
         if not change and not obj.created_by and request.user.is_authenticated:

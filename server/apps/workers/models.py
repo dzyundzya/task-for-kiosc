@@ -1,3 +1,5 @@
+from typing import override
+
 from django.db import models
 
 from server.apps.workers.choices import PositionType
@@ -66,6 +68,7 @@ class Worker(TimeStampedModel):
             ),
         )
 
+    @override
     def __str__(self) -> str:
         """Return a human-readable string representation of the worker."""
         return f'{self.last_name} {self.first_name} ({self.position})'

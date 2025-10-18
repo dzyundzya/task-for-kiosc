@@ -3,11 +3,9 @@ from django.contrib.auth.admin import UserAdmin
 
 from server.apps.users.models import CustomUser
 
-FIELDS = 'fields'
-
 
 @admin.register(CustomUser)
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):  # type: ignore[type-arg]
     """Admin interface for CustomUser."""
 
     list_display = (
@@ -35,12 +33,12 @@ class CustomUserAdmin(UserAdmin):
     readonly_fields = ('last_login', 'date_joined')
 
     fieldsets = (
-        (None, {FIELDS: ('username', 'password')}),
-        ('Personal info', {FIELDS: ('first_name', 'last_name', 'email')}),
+        (None, {'fields': ('username', 'password')}),  # noqa: WPS226
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
         (
             'Permissions',
             {
-                FIELDS: (
+                'fields': (
                     'role',
                     'is_active',
                     'is_staff',
@@ -50,7 +48,7 @@ class CustomUserAdmin(UserAdmin):
                 ),
             },
         ),
-        ('Important dates', {FIELDS: ('last_login', 'date_joined')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),  # noqa: WPS226
     )
 
     ordering = ('id',)

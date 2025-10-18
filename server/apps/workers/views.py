@@ -61,7 +61,7 @@ class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
         return resolve(WorkerRepo)
 
 
-class WorkerImportView(views.APIView):
+class WorkerImportView(views.APIView):  # type: ignore[misc]
     """Importing workers from Excel."""
 
     parser_classes = (MultiPartParser, FormParser)
