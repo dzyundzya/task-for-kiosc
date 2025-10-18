@@ -19,7 +19,6 @@ class WorkerImportService:
         self.errors: list[dict[str, Any]] = []
 
     def import_from_excel(self, file: UploadedFile) -> dict[str, Any]:
-        """Imports workers from Excel-file."""
         try:
             workbook = openpyxl.load_workbook(file)
         except Exception:
@@ -29,6 +28,11 @@ class WorkerImportService:
             }
 
         sheet = workbook.active
+        existing_emails = set(
+            Worker.objects.values_list('email', flat=True)
+        )
+
+        workers_to_create = []
 
         for idx, row in enumerate(
             sheet.iter_rows(min_row=2, values_only=True), start=2
@@ -37,28 +41,31 @@ class WorkerImportService:
 
             if not (first_name and last_name and email):
                 self.errors.append(
-                    {'row': idx, ERROR: 'Required fields are missing.'},
+                    {'row': idx, ERROR: 'Required fields are missing.'}
                 )
                 continue
 
             if '@' not in email:
                 self.errors.append(
-                    {'row': idx, ERROR: f'Incorrect email: {email}'},
+                    {'row': idx, ERROR: f'Incorrect email: {email}'}
                 )
                 continue
 
-            if Worker.objects.filter(email=email).exists():
+            if email in existing_emails:
                 self.errors.append(
-                    {'row': idx, ERROR: f'Email already exists: {email}'},
+                    {'row': idx, ERROR: f'Email already exists: {email}'}
                 )
                 continue
 
-            Worker.objects.create(
+            workers_to_create.append(Worker(
                 first_name=first_name.strip(),
                 last_name=last_name.strip(),
                 email=email.strip(),
                 position=position or 'other',
-            )
-            self.created_count += 1
+            ))
+            existing_emails.add(email)
+
+        Worker.objects.bulk_create(workers_to_create)
+        self.created_count = len(workers_to_create)
 
         return {'created': self.created_count, 'errors': self.errors}
