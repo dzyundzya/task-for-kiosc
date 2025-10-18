@@ -58,6 +58,6 @@ class WorkerImportSerializer(serializers.Serializer):  # type: ignore[misc]
         """Validate that uploaded file is Excel (.xlsx)."""
         if not value.name or not value.name.endswith('.xlsx'):
             raise serializers.ValidationError(
-                'Файл должен быть в формате .xlsx',
+                'File must be in the format .xlsx',
             )
         return value

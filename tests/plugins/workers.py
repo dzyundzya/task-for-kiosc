@@ -1,14 +1,13 @@
 from __future__ import annotations
 
+import io
 from collections.abc import Callable
-from datetime import datetime, timedelta
-from decimal import Decimal
 from typing import TYPE_CHECKING, TypedDict, Unpack
 
+import openpyxl
 import pytest
-from django.utils import timezone
+from django.core.files.uploadedfile import SimpleUploadedFile
 
-from server.apps.workers.choices import PositionType
 from server.apps.workers.models import Worker
 from server.apps.users.models import CustomUser
 
@@ -66,3 +65,43 @@ def worker_batch(worker_factory: WorkerFactory, auth_admin: CustomUser) -> Worke
             for worker_number in range(batch_size)
         ]
     return factory
+
+
+@pytest.fixture
+def success_excel() -> SimpleUploadedFile:
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.append(['first_name', 'last_name', 'email', 'position'])
+    sheet.append(['John', 'Doe', 'john@example.com', 'guard'])
+    sheet.append(['Jane', 'Smith', 'testtest@test.ru', 'other'])
+
+    stream = io.BytesIO()
+    workbook.save(stream)
+    stream.seek(0)
+
+    excel_file = SimpleUploadedFile(
+        'test_workers.xlsx',
+        stream.read(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    return excel_file
+
+
+@pytest.fixture
+def not_success_excel() -> SimpleUploadedFile:
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.append(['first_name', 'last_name', 'email', 'position'])
+    sheet.append(['', 'Doe', 'noemail', 'other'])
+    sheet.append(['John', 'Doe', 'bad_email', 'other'])
+
+    stream = io.BytesIO()
+    workbook.save(stream)
+    stream.seek(0)
+
+    excel_file = SimpleUploadedFile(
+        'test_workers.xlsx',
+        stream.read(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    return excel_file
