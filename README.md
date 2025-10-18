@@ -39,6 +39,7 @@ source .venv/Scripts/activate
 cp .env.example .env
 ```
 Отредактируйте `.env`, указав свои настройки.
+
 5. Примените миграции
 ```bash
 poetry run python manage.py migrate
@@ -123,5 +124,4 @@ ___
 
 ## Проект сделал:
 ### [✍️ Dzyundzya Alexandr](https://github.com/dzyundzya)
-### 📧 dzyundzya.aa@yandex.ru 
-### Telegram: @dzyundzya
+### 📧 dzyundzya.aa@yandex.ru, Telegram: @dzyundzya
