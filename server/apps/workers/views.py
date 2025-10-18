@@ -1,9 +1,11 @@
 import logging
 from typing import Any
 
+import openpyxl
 from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import  serializers, status, viewsets
+from rest_framework import  serializers, status, views, viewsets
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -15,6 +17,7 @@ from server.apps.workers.serializers import (
     WorkerDetailSerializer,
     WorkerListSerializer,
 )
+from server.apps.workers.services.import_workers import WorkerImportService
 from server.di import resolve
 
 
@@ -31,7 +34,7 @@ class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
 
     def get_queryset(self) -> QuerySet[Worker]:
         """Get queryset."""
-        return self.repo.get_all()
+        return self.repo.get_all_active()
     
     def get_serializer_class(self) -> type[serializers.BaseSerializer[Worker]]:
         """Method for selecting serializer."""
@@ -55,3 +58,23 @@ class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
     def repo(self) -> WorkerRepo:
         """Get WorkerRepo instance from dependency container."""
         return resolve(WorkerRepo)
+
+
+class WorkerImportView(views.APIView):
+    """Importing workers from Excel."""
+
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = (IsAdmibOrReadOnly,)
+
+    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        file = request.FILES.get('file')
+        if not file:
+            return Response(
+                {'error': 'File was not transferred.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        service = WorkerImportService()
+        result = service.import_from_excel(file)
+
+        return Response(result, status=status.HTTP_200_OK)

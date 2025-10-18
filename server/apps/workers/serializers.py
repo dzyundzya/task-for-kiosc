@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.db import IntegrityError
+from django.core.files.uploadedfile import UploadedFile
 from django.core.validators import validate_email
 from rest_framework import serializers
 
@@ -49,3 +50,14 @@ class WorkerCreateUpdateSerializer(WorkerListSerializer):
                 {'email': 'The email already exists.'}
             )
 
+
+class WorkerImportSerializer(serializers.Serializer):  # type: ignore[misc]
+    xl_file = serializers.FileField()
+
+    def validate_xl_file(self, value: UploadedFile) -> UploadedFile:
+        """Validate that uploaded file is Excel (.xlsx)."""
+        if not value.name or not value.name.endswith('.xlsx'):
+            raise serializers.ValidationError(
+                'Файл должен быть в формате .xlsx',
+            )
+        return value
