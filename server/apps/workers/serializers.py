@@ -49,10 +49,10 @@ class WorkerCreateUpdateSerializer(WorkerListSerializer):
         fields = (*WorkerListSerializer.Meta.fields, 'email')  # type: ignore[assignment]
         read_only_fields = ('id',)
 
-    def validate_email(self, data: str | None) -> str | None:
+    def validate_email(self, email: str | None) -> str | None:
         """Validate that the provided email address is valid."""
-        validate_email(data)
-        return data
+        validate_email(email)
+        return email
 
     def create(self, validated_data: dict[str, Any]) -> Any:
         """Create a new worker instance and handle email uniqueness."""
@@ -69,10 +69,10 @@ class WorkerImportSerializer(serializers.Serializer):  # type: ignore[misc]
 
     xl_file = serializers.FileField()
 
-    def validate_xl_file(self, value: UploadedFile) -> UploadedFile:
+    def validate_xl_file(self, uploaded_file: UploadedFile) -> UploadedFile:
         """Validate that uploaded file is Excel (.xlsx)."""
-        if not value.name or not value.name.endswith('.xlsx'):
+        if not uploaded_file.name or not uploaded_file.name.endswith('.xlsx'):
             raise serializers.ValidationError(
                 'File must be in the format .xlsx',
             )
-        return value
+        return uploaded_file

@@ -18,10 +18,10 @@ class WorkerImportService:
         self.created_count = 0
         self.errors: list[dict[str, Any]] = []
 
-    def import_from_excel(self, file: UploadedFile) -> dict[str, Any]:
+    def import_from_excel(self, excel_file: UploadedFile) -> dict[str, Any]:  # noqa: WPS210, WPS231
         """Import worker data from an uploaded Excel file."""
         try:
-            workbook = openpyxl.load_workbook(file)
+            workbook = openpyxl.load_workbook(excel_file)
         except Exception:
             return {
                 'created': 0,

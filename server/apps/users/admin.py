@@ -3,6 +3,8 @@ from django.contrib.auth.admin import UserAdmin
 
 from server.apps.users.models import CustomUser
 
+FIELDS = 'fields'
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
@@ -33,12 +35,12 @@ class CustomUserAdmin(UserAdmin):
     readonly_fields = ('last_login', 'date_joined')
 
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
+        (None, {FIELDS: ('username', 'password')}),
+        ('Personal info', {FIELDS: ('first_name', 'last_name', 'email')}),
         (
             'Permissions',
             {
-                'fields': (
+                FIELDS: (
                     'role',
                     'is_active',
                     'is_staff',
@@ -48,7 +50,7 @@ class CustomUserAdmin(UserAdmin):
                 ),
             },
         ),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Important dates', {FIELDS: ('last_login', 'date_joined')}),
     )
 
     ordering = ('id',)
