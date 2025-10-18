@@ -1,6 +1,8 @@
 import logging
 
 from django.contrib import admin
+from django.forms import BaseModelForm
+from django.http import HttpRequest
 from server.apps.workers.models import Worker
 
 
@@ -23,9 +25,15 @@ class WorkerAdmin(admin.ModelAdmin[Worker]):
     list_editable = ('is_active',)
     readonly_fields = ('created_at', 'updated_at', 'hired_date')
 
-    def save_model(self, request, obj, form, change):
-        if not obj.created_by and request.user and request.user.is_authenticated:
+    def save_model(
+        self, 
+        request: HttpRequest, 
+        obj: Worker,  # noqa: WPS110
+        form: BaseException | None, 
+        change: bool
+    ) -> None:
+        """Set creator on creation and log event."""
+        if not change and not obj.created_by and request.user.is_authenticated:
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
-        if not change:
-            logger.info(f'[ADMIN] Worker created by {request.user}: {obj}')
+        logger.info(f'[ADMIN] Worker created by {request.user}: {obj}')

@@ -55,3 +55,4 @@ def test_soft_delete_worker(worker: Worker) -> None:
     delete_worker = repo.soft_delete(pk=worker.id)
 
     assert delete_worker.deleted_at != old_deleted_at
+    assert delete_worker.deleted_at is not None
