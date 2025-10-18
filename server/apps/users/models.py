@@ -32,4 +32,5 @@ class CustomUser(AbstractUser):
 
     @property
     def is_admin(self) -> bool:
-        return self.role in RoleType.ADMIN or self.is_superuser
+        """Return True if user has admin role or is superuser."""
+        return self.role == RoleType.ADMIN or self.is_superuser

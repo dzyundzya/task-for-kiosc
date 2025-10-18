@@ -1,16 +1,17 @@
 import logging
 
 from django.contrib import admin
-from django.forms import BaseModelForm
 from django.http import HttpRequest
-from server.apps.workers.models import Worker
 
+from server.apps.workers.models import Worker
 
 logger = logging.getLogger(__name__)
 
 
 @admin.register(Worker)
 class WorkerAdmin(admin.ModelAdmin[Worker]):
+    """Admin configuration for the Worker model."""
+
     list_display = (
         'id',
         'last_name',
@@ -30,10 +31,10 @@ class WorkerAdmin(admin.ModelAdmin[Worker]):
         request: HttpRequest,
         obj: Worker,  # noqa: WPS110
         form: BaseException | None,
-        change: bool,
+        change: bool,  # noqa: FBT001
     ) -> None:
         """Set creator on creation and log event."""
         if not change and not obj.created_by and request.user.is_authenticated:
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
-        logger.info(f'[ADMIN] Worker created by {request.user}: {obj}')
+        logger.info('[ADMIN] Worker created by %s: %s', request.user, obj)

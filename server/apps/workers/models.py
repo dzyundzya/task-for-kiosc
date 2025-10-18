@@ -1,12 +1,11 @@
 from django.db import models
-from django.utils import timezone
 
 from server.apps.workers.choices import PositionType
 from server.common import constants
 
 
 class TimeStampedModel(models.Model):
-    "Abstract model with time shtamps."
+    """Abstract model with time shtamps."""
 
     created_at = models.DateTimeField('Date created', auto_now_add=True)
     updated_at = models.DateTimeField('Date updated', auto_now=True)
@@ -55,11 +54,11 @@ class Worker(TimeStampedModel):
 
     class Meta:
         ordering = ('-created_at',)
-        indexes = [
+        indexes = (
             models.Index(fields=['email']),
             models.Index(fields=['position']),
             models.Index(fields=['is_active']),
-        ]
+        )
         constraints = (
             models.CheckConstraint(
                 name='%(app_label)s_%(class)s_position_valid',
@@ -68,4 +67,5 @@ class Worker(TimeStampedModel):
         )
 
     def __str__(self) -> str:
+        """Return a human-readable string representation of the worker."""
         return f'{self.last_name} {self.first_name} ({self.position})'

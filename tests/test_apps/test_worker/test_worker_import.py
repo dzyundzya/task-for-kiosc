@@ -1,15 +1,11 @@
 from __future__ import annotations
 
-import io
 from http import HTTPStatus
 
-import openpyxl
 import pytest
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APIClient
-
 
 from server.apps.workers.models import Worker
 from server.apps.workers.serializers import WorkerImportSerializer
@@ -31,7 +27,7 @@ def test_import_from_excel_success(success_excel: SimpleUploadedFile) -> None:
 def test_import_from_excel_with_errors(
     not_success_excel: SimpleUploadedFile,
 ) -> None:
-    """An error handling test during import"""
+    """An error handling test during import."""
     service = WorkerImportService()
     workers = service.import_from_excel(not_success_excel)
 
@@ -86,7 +82,7 @@ def test_validate_xl_file_invalid_extension() -> None:
     serializer = WorkerImportSerializer()
 
     with pytest.raises(
-        ValidationError, match='File must be in the format .xlsx'
+        ValidationError, match=r'File must be in the format .xlsx'
     ):
         serializer.validate_xl_file(not_excel_file)
 
@@ -104,7 +100,7 @@ def test_import_view_no_file(auth_admin_client: APIClient) -> None:
 def test_import_view_with_valid_file(
     auth_admin_client: APIClient, success_excel: SimpleUploadedFile
 ) -> None:
-    """Checks the successful download of the Excel file"""
+    """Checks the successful download of the Excel file."""
     response = auth_admin_client.post(
         '/api/workers/import/',
         data={'file': success_excel},

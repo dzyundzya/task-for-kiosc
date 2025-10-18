@@ -1,11 +1,10 @@
 import logging
 from typing import Any
 
-import openpyxl
 from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, status, views, viewsets
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -19,7 +18,6 @@ from server.apps.workers.serializers import (
 )
 from server.apps.workers.services.import_workers import WorkerImportService
 from server.di import resolve
-
 
 logger = logging.getLogger(__name__)
 
@@ -44,9 +42,12 @@ class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
         }.get(self.action, WorkerCreateUpdateSerializer)
 
     def perform_create(self, serializer: WorkerCreateUpdateSerializer) -> None:
+        """Save a new Worker instance and log the creation event."""
         worker = serializer.save(created_by=self.request.user)
         logger.info(
-            f'Worker created (id={worker.id}) by user={self.request.user.id}'
+            'Worker created (id=%s) by user={%s}',
+            worker.id,
+            self.request.user.id,
         )
 
     def destroy(self, request: Request, *args: Any, **kwargs: Any) -> Response:
@@ -63,18 +64,19 @@ class WorkerViewSet(viewsets.ModelViewSet[Worker]):  # type: ignore[misc]
 class WorkerImportView(views.APIView):
     """Importing workers from Excel."""
 
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAdmibOrReadOnly,)
 
     def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        file = request.FILES.get('file')
-        if not file:
+        """Post request to import workers from the uploaded Excel file."""
+        excel_file = request.FILES.get('file')
+        if not excel_file:
             return Response(
                 {'error': 'File was not transferred.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         service = WorkerImportService()
-        result = service.import_from_excel(file)
+        added_workers = service.import_from_excel(excel_file)
 
-        return Response(result, status=status.HTTP_200_OK)
+        return Response(added_workers, status=status.HTTP_200_OK)

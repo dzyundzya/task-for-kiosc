@@ -8,8 +8,8 @@ import openpyxl
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from server.apps.workers.models import Worker
 from server.apps.users.models import CustomUser
+from server.apps.workers.models import Worker
 
 if TYPE_CHECKING:
     from tests.plugins.fakery import FakeryM
@@ -72,6 +72,7 @@ def worker_batch(
 
 @pytest.fixture
 def success_excel() -> SimpleUploadedFile:
+    """Return a valid Excel file with correct worker data."""
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     sheet.append(['first_name', 'last_name', 'email', 'position'])
@@ -82,16 +83,16 @@ def success_excel() -> SimpleUploadedFile:
     workbook.save(stream)
     stream.seek(0)
 
-    excel_file = SimpleUploadedFile(
+    return SimpleUploadedFile(
         'test_workers.xlsx',
         stream.read(),
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
-    return excel_file
 
 
 @pytest.fixture
 def not_success_excel() -> SimpleUploadedFile:
+    """Return an Excel file with invalid worker data for validation tests."""
     workbook = openpyxl.Workbook()
     sheet = workbook.active
     sheet.append(['first_name', 'last_name', 'email', 'position'])
@@ -102,9 +103,8 @@ def not_success_excel() -> SimpleUploadedFile:
     workbook.save(stream)
     stream.seek(0)
 
-    excel_file = SimpleUploadedFile(
+    return SimpleUploadedFile(
         'test_workers.xlsx',
         stream.read(),
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
-    return excel_file

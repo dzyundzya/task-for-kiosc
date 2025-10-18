@@ -19,7 +19,6 @@ from server.apps.users import urls as users_urls
 from server.apps.workers import urls as workers_urls
 from server.di import resolve
 
-
 contrib.admin.autodiscover()
 settings = resolve(conf.LazySettings)
 

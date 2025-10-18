@@ -23,7 +23,10 @@ class WorkerRepo:
         return self.get_all().get(pk=pk)
 
     def soft_delete(self, pk: int) -> Worker:
+        """Deactivate worker and set deleted timestamp."""
         worker = self.get_by_pk(pk=pk)
+        if not worker.is_active:
+            return worker
         worker.is_active = False
         worker.deleted_at = timezone.now()
         worker.save(update_fields=('is_active', 'updated_at', 'deleted_at'))

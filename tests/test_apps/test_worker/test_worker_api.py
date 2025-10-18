@@ -4,10 +4,7 @@ import pytest
 from django.urls import reverse
 from rest_framework.test import APIClient
 
-from server.apps.workers.infra.repository import WorkerRepo
 from server.apps.workers.models import Worker
-from server.di import resolve
-from tests.plugins.workers import WorkerBatchFactory
 
 
 @pytest.mark.django_db
@@ -52,6 +49,7 @@ def test_create_worker(auth_admin_client: APIClient) -> None:
 
 @pytest.mark.django_db
 def test_email_exists(worker: Worker, auth_admin_client: APIClient) -> None:
+    """Check that API returns 400 when email already exists."""
     url = reverse('workers-list')
     payload = {
         'first_name': 'F Name',

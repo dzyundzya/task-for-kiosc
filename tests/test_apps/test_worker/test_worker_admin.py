@@ -27,7 +27,6 @@ def test_admin_save_model_logs_creation(
     )
 
     caplog.set_level(logging.INFO)
-
     admin.save_model(request, worker, form=None, change=False)
 
     assert worker.created_by == auth_admin
@@ -37,6 +36,7 @@ def test_admin_save_model_logs_creation(
 def test_save_model_preserves_creator(
     auth_admin: CustomUser, worker: Worker
 ) -> None:
+    """Check that save_model does not change the creator on update."""
     site = AdminSite()
     admin = WorkerAdmin(Worker, site)
     request = RequestFactory().get('/')

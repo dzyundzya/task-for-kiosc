@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import openpyxl
 from typing import Any
 
+import openpyxl
 from django.core.files.uploadedfile import UploadedFile
 
 from server.apps.workers.models import Worker
-
 
 ERROR = 'error'
 
@@ -15,10 +14,12 @@ class WorkerImportService:
     """Service for importing workers from Excel."""
 
     def __init__(self) -> None:
+        """Initialize the service with counters and error storage."""
         self.created_count = 0
         self.errors: list[dict[str, Any]] = []
 
     def import_from_excel(self, file: UploadedFile) -> dict[str, Any]:
+        """Import worker data from an uploaded Excel file."""
         try:
             workbook = openpyxl.load_workbook(file)
         except Exception:
